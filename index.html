@@ -1,53 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Police Hooter</title>
-  <style>
-    body {
-      background: black;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: Arial;
-    }
-    .msg {
-      font-size: 20px;
-      opacity: 0.8;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Police Hooter</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: black;
+            font-family: Arial, sans-serif;
+            gap: 20px;
+        }
+
+        button {
+            padding: 20px 40px;
+            font-size: 22px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        input[type="range"] {
+            width: 220px;
+            accent-color: red;
+        }
+
+        label {
+            color: white;
+            font-size: 16px;
+        }
+
+        .hint {
+            color: #aaa;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="msg">
-  Click once, then press <b>B</b> for Hooter 🚨
-</div>
+    <button onclick="toggleSound()">PLAY HOOTER</button>
 
-<script>
-  const audio = new Audio("Original Police Siren Sound Police Hooter Sound First Official Entertaining Video.mp3");
-  audio.loop = true;
-  let activated = false;
+    <div class="hint">Press <b>L</b> to Play / Stop 🚨</div>
 
-  // First click = allow sound
-  document.body.addEventListener("click", () => {
-    activated = true;
-  });
+    <label>Volume</label>
+    <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
 
-  // Keyboard control
-  document.addEventListener("keydown", (e) => {
-    if (!activated) return;
+    <audio id="hooter">
+        <source src="Original Police Siren Sound Police Hooter Sound First Official Entertaining Video.mp3" type="audio/mpeg">
+    </audio>
 
-    if (e.key.toLowerCase() === "b") {
-      if (audio.paused) {
-        audio.play();
-      } else {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    }
-  });
-</script>
+    <script>
+        const audio = document.getElementById("hooter");
+        const button = document.querySelector("button");
+        const volumeSlider = document.getElementById("volume");
+
+        let isPlaying = false;
+        let activated = false; // audio permission flag
+
+        audio.volume = 0.5;
+
+        volumeSlider.addEventListener("input", function () {
+            audio.volume = this.value;
+        });
+
+        function toggleSound() {
+            activated = true; // unlock audio
+
+            if (!isPlaying) {
+                audio.play();
+                button.textContent = "STOP HOOTER";
+            } else {
+                audio.pause();
+                audio.currentTime = 0;
+                button.textContent = "PLAY HOOTER";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Keyboard control (L key)
+        document.addEventListener("keydown", function (e) {
+            if (!activated) return;
+
+            if (e.key.toLowerCase() === "l") {
+                if (!isPlaying) {
+                    audio.play();
+                    button.textContent = "STOP HOOTER";
+                    isPlaying = true;
+                } else {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    button.textContent = "PLAY HOOTER";
+                    isPlaying = false;
+                }
+            }
+        });
+    </script>
 
 </body>
 </html>
