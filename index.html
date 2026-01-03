@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Police Hooter</title>
+  <style>
+    body {
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial;
+    }
+    .msg {
+      font-size: 20px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+<div class="msg">
+  Click once, then press <b>B</b> for Hooter 🚨
+</div>
+
+<script>
+  const audio = new Audio("hooter.mp3");
+  audio.loop = true;
+  let activated = false;
+
+  // First click = allow sound
+  document.body.addEventListener("click", () => {
+    activated = true;
+  });
+
+  // Keyboard control
+  document.addEventListener("keydown", (e) => {
+    if (!activated) return;
+
+    if (e.key.toLowerCase() === "b") {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
